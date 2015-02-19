@@ -5,22 +5,30 @@ Rails allows incremental database migrations, but only provides a single seed fi
 
 To install the Germinator database table and the db/germinate directory in your Rails application:
 
-1. Add the gem to your gemfile:
+#### 1. Add the gem to your gemfile:
 
-    gem "germinator", github: "WowzaMediaSystems/germinator"
+```ruby
+# myapplication/Gemfile
+gem "germinator", github: "WowzaMediaSystems/germinator"
+```
 
-2. In the terminal, make sure you're in your application directory:
+#### 2. In the terminal, make sure you're in your application directory:
 
-    $ cd /myapplication
+```bash
+$ cd /myapplication
+```
 
+#### 3. Run bundle install:
 
-3. Run bundle install:
+```bash
+$ bundle install
+```
 
-    $ bundle install
+#### 4. Generate the germinator installer:
 
-4. Generate the germinator installer:
-
-    $ rails generate install_germinator
+```bash
+$ rails generate install_germinator
+```
 
 You're done!!
 
