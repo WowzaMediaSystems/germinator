@@ -21,6 +21,7 @@ module Germinator
     # *step:* => A maximum number of seeds to germinate.  nil or 0 will execute all unseeded files in the germinate directory. (default: nil)
     #
     def germinate p={}
+      confirm_database_table
       include_seeds
       step = p.has_key?(:step) ? p[:step].to_i : nil
       step = nil if step==0
@@ -63,6 +64,7 @@ module Germinator
     # *step:* => A maximum number of seeds to shrivel.  nil or 0 will execute all unseeded files in the germinate directory. (default: 1)
     #    
     def shrivel p={}
+      confirm_database_table
       include_seeds
       step = p.has_key?(:step) ? p[:step].to_i : 1
       step = nil if step==0
@@ -129,6 +131,7 @@ module Germinator
     # *germinator_name* => The snake case name of the germinator file, minus the time stamp. Example: 20150201120001_some_germinator_file becomes some_germinator_file.
     #
     def plant germinator_name
+      confirm_database_table
       include_seeds
       _seeds = seeds
       seed = seeds.select{ |key, seed| seed.name === germinator_name }.first[1]
@@ -251,6 +254,15 @@ module Germinator
     #
     def puts content, indent=3
       STDOUT.puts "#{(" "*indent)}#{content}"
+    end
+
+
+    private
+    def confirm_database_table
+      ActiveRecord::Base.establish_connection
+      unless ActiveRecord::Base.connection.table_exists? Germinator::VERSION_TABLE_NAME
+        ActiveRecord::Base.connection.execute("CREATE TABLE `#{Germinator::VERSION_TABLE_NAME}` (`version` VARCHAR(20) NOT NULL)")      
+      end
     end
   end
 
