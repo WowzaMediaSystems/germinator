@@ -5,6 +5,13 @@ Rails allows incremental database migrations, but only provides a single seed fi
 
 This Rails Gem is distributed under the MIT Open Source License.  To read more about it view the [MIT-LICENSE](https://github.com/WowzaMediaSystems/germinator/blob/master/MIT-LICENSE) file in the repository.
 
+#### Attribution
+
+This gem was created by:
+
+- Jocko MacGregor
+- Wowza Media Systems, Inc.
+
 # Installation
 
 To install the Germinator database table and the db/germinate directory in your Rails application:
