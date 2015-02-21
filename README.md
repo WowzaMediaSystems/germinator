@@ -167,7 +167,7 @@ $ rake db:reseed[3]
 
 This will reseed the last three see files.
 
-# Plant the Database
+# Planting the Database
 
 Germinator allows for a process called Planting.   The `plant` method in the seed file can be executed multiple times.   This can be used as a way to clean or update database records as needed throughout the life of the database.  To execute a plant command you call the plant rake task and pass in the name of the seed file to execute. 
 
@@ -175,4 +175,4 @@ If you have a seed file called `20150217100232_example_seeder.rb` you can execut
 
 ```bash
 $ rake db:plant["example_seeder"]
-``
+```
