@@ -101,4 +101,78 @@ class MyFirstSeederSeed < Germinator::Seed
 end
 ```
 
+# Germinating the Database
 
+To run all of the unexecuted Germinator seed files, run the following command from the application directory:
+
+```bash
+$ rake db:germinate
+```
+
+This will compare the available seed files against the timestamps stored in the `germinator_migrations` table, and run any file that has a timestamp that hasn't been stored in the table.  Files are executed in chronological order, according to their timestamp. Once the file is run, its timestamp is stored in the table.
+
+#### Limiting Germinate Execution
+
+By default, all unexecuted seed files are run by the `db:germinate` task.  If you only want to run a limited number of seeds, you can pass in seed limit value to the rake task.  For instance, if you only want to run the next available seed file, you would do so like this:
+
+```bash
+$ rake db:germinate[1]
+```
+
+# Shriveling the Database
+
+To reverse the germinate process, you run the shrivel task.  This calls the shrivel command on each previously executed Germinator seed file in reverse-chronological order. To execute the task, run the following command from the application directory:
+
+```bash
+$ rake db:shrivel
+```
+
+By default this will only shrivel by one file at a time.  Each execution removes the timestamp of the executed file from the `germinator_migrations` table.
+
+#### Executing Shrivel Multiple Times
+
+By default, Shrivel will only execute one file at a time.  To increase the number of files executed during the Shrivel process you can pass in a limit value:
+
+```bash
+$ rake db:shrivel[3]
+```
+
+This will execute the last three files in reverse chronological order.
+
+#### Shriveling All Files
+
+To shrivel the database for all execute files you can run the following command in the application directory:
+
+```bash
+$ rake db:shrivel[0]
+```
+
+# Reseeding the Database
+
+To completely reseed the database, you can execute the reseed task like this:
+
+```bash
+$ rake db:reseed
+```
+
+This executes the shrivel command on all previously executed see files, and then follows that by executing the germinate command on all available files.
+
+#### Limiting the Reseed 
+
+To limit the how many of the files get reseeded, you can set the limit like this:
+
+```bash
+$ rake db:reseed[3]
+```
+
+This will reseed the last three see files.
+
+# Plant the Database
+
+Germinator allows for a process called Planting.   The `plant` method in the seed file can be executed multiple times.   This can be used as a way to clean or update database records as needed throughout the life of the database.  To execute a plant command you call the plant rake task and pass in the name of the seed file to execute. 
+
+If you have a seed file called `20150217100232_example_seeder.rb` you can execute the plant command like this:
+
+```bash
+$ rake db:plant["example_seeder"]
+``
