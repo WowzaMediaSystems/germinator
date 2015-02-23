@@ -1,0 +1,5 @@
+Date        Description
+==========  ====================================================================
+2015-02-23  Fixed a problem with the germinator not properly generating the 
+            array of seeded versions, and allowing previously executed seeds to
+            be run a second time.
