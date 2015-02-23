@@ -152,7 +152,7 @@ This will execute the last three files in reverse chronological order.
 
 #### Shriveling All Files
 
-To shrivel the database for all execute files you can run the following command in the application directory:
+To shrivel the database for all executed files you can run the following command in the application directory:
 
 ```bash
 $ rake db:shrivel[0]
@@ -170,13 +170,13 @@ This executes the shrivel command on all previously executed see files, and then
 
 #### Limiting the Reseed 
 
-To limit the how many of the files get reseeded, you can set the limit like this:
+To limit how many of the files get reseeded, you can set the limit like this:
 
 ```bash
 $ rake db:reseed[3]
 ```
 
-This will reseed the last three see files.
+This will reseed the last three seed files.
 
 # Planting the Database
 
