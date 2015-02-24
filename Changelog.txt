@@ -1,5 +1,8 @@
 Date        Description
 ==========  ====================================================================
+2015-02-24  Fixed the handling of plant requests for seed names that do not
+            exist.
+            
 2015-02-23  Fixed a problem with the germinator not properly generating the 
             array of seeded versions, and allowing previously executed seeds to
             be run a second time.

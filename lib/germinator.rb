@@ -130,29 +130,37 @@ module Germinator
     #
     # *germinator_name* => The snake case name of the germinator file, minus the time stamp. Example: 20150201120001_some_germinator_file becomes some_germinator_file.
     #
-    def plant germinator_name
+    def plant seed_name
       confirm_database_table
       include_seeds
-      _seeds = seeds
-      seed = seeds.select{ |key, seed| seed.name === germinator_name }.first[1]
+      _seeds = seeds.select{ |key, seed| seed.name === seed_name }.first[1]
 
-      begin
+      if _seeds.length
+        seed = _seeds.first[1]
+        begin
 
-        puts "== #{seed.name}: PLANT ==========", 0
-        seed_object = get_seed_object seed
-        seed_object.plant
-        puts "== #{seed.name}: END   ==========", 0
-        
-        add_seeded_version seed.version
-      rescue Exception => e
+          puts "== #{seed.name}: PLANT ==========", 0
+          seed_object = get_seed_object seed
+          seed_object.plant
+          puts "== #{seed.name}: END   ==========", 0
+          
+          add_seeded_version seed.version
+        rescue Exception => e
+          puts ""
+          puts "-"*80
+          puts e
+          puts "-"*80
+          puts ""
+          puts "There was an error while executing the seeds.  Plant stopped!", 0
+          puts ""
+          return
+        end
+      else
         puts ""
         puts "-"*80
-        puts e
+        puts "Seed #{seed_name} does not exist.  Canceling plant request."
         puts "-"*80
         puts ""
-        puts "There was an error while executing the seeds.  Plant stopped!", 0
-        puts ""
-        return
       end
 
     end
