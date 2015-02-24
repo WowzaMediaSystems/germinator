@@ -133,7 +133,7 @@ module Germinator
     def plant seed_name
       confirm_database_table
       include_seeds
-      _seeds = seeds.select{ |key, seed| seed.name === seed_name }.first[1]
+      _seeds = seeds.select{ |key, seed| seed.name === seed_name }
 
       if _seeds.length
         seed = _seeds.first[1]
