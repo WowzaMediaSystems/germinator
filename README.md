@@ -145,6 +145,14 @@ class MyFirstSeedSeed < Germinator::Seed
 end
 ```
 
+#### Environments vs. Configure
+
+Germinate v2.0 now uses a method called `configure` to determine how the seed file behaves.   This method replaces the previous `environments` method, and expands upon the idea of configuring the seed. 
+
+Don't worry, this behavior is backwards compatible, by default the configure.environments value is set to the existing `envrionments` method value.  This will be removed in the future, but is simply deprecated for now.
+
+For more details on how to use the configure method, see the example code above.
+
 # Germinating the Database
 
 To run all of the unexecuted seed files, run the following command from the application directory:
@@ -210,3 +218,32 @@ $ rake db:reseed[3]
 ```
 
 This will reseed the last three seed files.
+
+# Migrations and Seeds
+
+It may be useful to execute a seed file from within the context of a Migration.  For that, the Germinator module has two helper methods for executing a Seed files germinate and shrivel methods.
+
+#### Germinating
+
+To `germinate` a seed file you can simply execute the following command in the `up` method of a migration file like so:
+
+```ruby
+    def up
+      Germinator.germinate('some_seed_file_name')
+    end
+```
+
+This will search for a file with name "some_seed_file_name" (disregarding the timestamp), and execute it's germinate command.  This will only occur if the seed file has not been previously germinated.
+
+
+#### Shriveling
+
+To `shrivel` a seed file you can simply execute the following command in the `down` method of a migration file like so:
+
+```ruby
+    def down
+      Germinator.shrivel('some_seed_file_name')
+    end
+```
+
+This will search for a file with name "some_seed_file_name" (disregarding the timestamp), and execute it's shrivel command.  This will only occur if the seed file has been previously germinated.
