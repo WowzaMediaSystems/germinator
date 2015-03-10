@@ -16,47 +16,83 @@ module Germinator
     # *step:* => A maximum number of seeds to germinate.  nil or 0 will execute all unseeded files in the germinate directory. (default: nil)
     #
     def germinate p={}
-      Base::confirm_database_table
-      include_seeds
       step = p.has_key?(:step) ? p[:step].to_i : nil
       step = nil if step==0
 
       i = 0
       _seeds = unseeded
 
-      _seeds.keys.sort.each do |key|
-        seed = _seeds[key]
-
-        puts "== #{seed}: GERMINATE ==========", 0
-        begin
-          
-          seed_object = get_seed_object seed
-          output_config seed_object
-          seed_object.migrate :up
-          
-          add_seeded_version seed.version, seed.name, seed_object.response, seed_object.message
-        rescue Germinator::Errors::InvalidSeedEnvironment => e
-          puts e.message
-          add_seeded_version seed.version, seed.name, seed_object.response, seed_object.message
-        rescue Germinator::Errors::InvalidSeedModel => e
-          puts e.message
-          return if seed_object.config.stop_on_bad_model
-          add_seeded_version seed.version, seed.name, seed_object.response, seed_object.message
-          puts "Moving on..."
-        rescue Exception => e
-          puts ""
-          puts_error e
-          puts ""
-          puts "There was an error while executing the seeds.  Germination stopped!", 0
-          puts ""
-          return if !seed_object || seed_object.config.stop_on_error
-          add_seeded_version seed.version, seed.name, seed_object.response, seed_object.message
-        ensure
-          puts "== #{seed}: END       ==========", 0
-        end
-
+      _seeds.keys.sort.each do |seed_name|
+        germinate_by_seed_name seed_name
         i += 1
         break if step and i >= step
+      end
+    end
+
+    ##
+    # Executes a seed file's germinate method using the name of the seed file.
+    # The germinate method is only executed if it has not been executed previously.
+    #
+    def germinate_by_name name
+      Base::confirm_database_table
+      include_seeds      
+      _seeds = seeds.select{ |seed_name, seed| seed.name == name }
+      return if _seeds.size == 0
+      seed_name, seed = _seeds.first
+      germinate_by_seed_name seed_name
+    end
+
+    ##
+    # Executes a seed file's germinate method using the version of the seed file.
+    # The germinate method is only executed if it has not been executed previously.
+    #
+    def germinate_by_version version
+      _seeds = seeds.select{ |seed_name, seed| seed.version == version }
+      return if _seeds.size == 0
+      seed_name, seed = _seeds.first
+      germinate_by_seed_name seed_name
+    end
+
+
+    ##
+    # Executes a seed file's germinate method using the seed_name (version_name) of 
+    # the seed file. The germinate method is only executed if it has not been executed 
+    # previously.
+    #
+    def germinate_by_seed_name seed_name
+      Base::confirm_database_table
+      include_seeds      
+      _seeds = unseeded
+      return unless _seeds.has_key?(seed_name)
+      
+      seed = _seeds[seed_name]
+
+      puts "== #{seed}: GERMINATE ==========", 0
+      begin
+        
+        seed_object = get_seed_object seed
+        output_config seed_object
+        seed_object.migrate :up
+        
+        add_seeded_version seed.version, seed.name, seed_object.response, seed_object.message
+      rescue Germinator::Errors::InvalidSeedEnvironment => e
+        puts e.message
+        add_seeded_version seed.version, seed.name, seed_object.response, seed_object.message
+      rescue Germinator::Errors::InvalidSeedModel => e
+        puts e.message
+        return if seed_object.config.stop_on_bad_model
+        add_seeded_version seed.version, seed.name, seed_object.response, seed_object.message
+        puts "Moving on..."
+      rescue Exception => e
+        puts ""
+        puts_error e
+        puts ""
+        puts "There was an error while executing the seeds.  Germination stopped!", 0
+        puts ""
+        raise e if !seed_object || seed_object.config.stop_on_error
+        add_seeded_version seed.version, seed.name, seed_object.response, seed_object.message
+      ensure
+        puts "== #{seed}: END       ==========", 0
       end
     end
 
@@ -77,44 +113,81 @@ module Germinator
       i = 0
       _seeds = seeded
 
-      _seeds.keys.sort.reverse.each do |key|
-        seed = _seeds[key]
-
-        begin
-          puts "== #{seed}: SHRIVEL ==========", 0
-          seed_object = get_seed_object seed
-          output_config seed_object
-          seed_object.migrate :down
-          puts "== #{seed}: END     ==========", 0
-          
-          remove_seeded_version seed.version
-        rescue Germinator::Errors::InvalidSeedEnvironment => e
-          puts e.message
-          remove_seeded_version seed.version
-        rescue Germinator::Errors::InvalidSeedModel => e
-          puts e.message
-          return if seed_object && seed_object.config.stop_on_bad_model
-          remove_seeded_version seed.version
-          puts "Moving on..."          
-        rescue Exception => e
-          puts ""
-          puts_error e
-          puts ""
-          puts "There was an error while executing the seeds.  Shrivel stopped!", 0
-          puts ""
-          return if !seed_object || seed_object.config.stop_on_error
-          remove_seeded_version seed.version
-        ensure
-          puts "== #{seed}: END       ==========", 0
-        end
-
+      _seeds.keys.sort.reverse.each do |seed_name|
+        shrivel_by_seed_name seed_name
         i += 1
         break if step and i >= step
       end      
     end
 
 
+    ##
+    # Executes a seed file's germinate method using the name of the seed file.
+    # The germinate method is only executed if it has not been executed previously.
+    #
+    def shrivel_by_name name
+      _seeds = seeds.select{ |seed_name, seed| seed.name == name }
+      return if _seeds.size == 0
+      seed_name, seed = _seeds.first
+      shrivel_by_seed_name seed_name
+    end
 
+
+    ##
+    # Executes a seed file's germinate method using the version of the seed file.
+    # The germinate method is only executed if it has not been executed previously.
+    #
+    def shrivel_by_version version
+      _seeds = seeds.select{ |seed_name, seed| seed.version == version }
+      return if _seeds.size == 0
+      seed_name, seed = _seeds.first
+      shrivel_by_seed_name seed_name
+    end
+
+
+    ##
+    # Executes a seed file's germinate method using the seed_name (version_name) of 
+    # the seed file. The germinate method is only executed if it has not been executed 
+    # previously.
+    #
+    def shrivel_by_seed_name seed_name
+      Base::confirm_database_table
+      include_seeds      
+
+      _seeds = seeded
+      return unless _seeds.has_key?(seed_name)
+      
+      seed = _seeds[seed_name]
+
+      begin
+        puts "== #{seed}: SHRIVEL ==========", 0
+        seed_object = get_seed_object seed
+        output_config seed_object
+        seed_object.migrate :down
+        puts "== #{seed}: END     ==========", 0
+        
+        remove_seeded_version seed.version
+      rescue Germinator::Errors::InvalidSeedEnvironment => e
+        puts e.message
+        remove_seeded_version seed.version
+      rescue Germinator::Errors::InvalidSeedModel => e
+        puts e.message
+        return if seed_object && seed_object.config.stop_on_bad_model
+        remove_seeded_version seed.version
+        puts "Moving on..."          
+      rescue Exception => e
+        puts ""
+        puts_error e
+        puts ""
+        puts "There was an error while executing the seeds.", 0
+        puts ""
+        raise e if !seed_object || seed_object.config.stop_on_error
+        puts "Moving on..."
+        remove_seeded_version seed.version
+      ensure
+        puts "== #{seed}: END       ==========", 0
+      end
+    end
 
 
     ##

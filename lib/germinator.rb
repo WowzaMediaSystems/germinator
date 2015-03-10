@@ -13,4 +13,14 @@ module Germinator
   # Default seed path for the germinate files.
   SEED_PATH = "db/germinate"
 
+  def Germinator.germinate name
+    seeder = Germinator::Seeder.new
+    seeder.germinate_by_name name
+  end
+
+  def Germinator.shrivel name
+    seeder = Germinator::Seeder.new
+    seeder.shrivel_by_name name
+  end
+
 end

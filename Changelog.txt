@@ -1,5 +1,15 @@
 Date        Description
 ==========  ====================================================================
+2015-03-10  Began v2.0.0 - Major overhaul to the germinate/shrivel processes. 
+            - Added the ability to configure a Seed file to behave better in the
+              event of a missing model, or an Exception.
+            - Added better tracking of seed status in the database table.
+            - Removed the "plant" functionality, because it can be more easily
+              managed through a rake task if someone needs repeated database
+              modifications.
+            - Added ability to execute seeds (germinate/shrivel) from the code
+              base including in Migration files.
+              
 2015-02-24  Fixed the handling of plant requests for seed names that do not
             exist.
             
