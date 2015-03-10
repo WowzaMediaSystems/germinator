@@ -43,6 +43,11 @@ module Germinator
           puts ""
           puts "-"*80
           puts e
+          if e.backtrace and e.backtrace.size > 0
+            e.backtrace.each do |trace|
+              puts "#{trace}"
+            end
+          end
           puts "-"*80
           puts ""
           puts "There was an error while executing the seeds.  Germination stopped!", 0
