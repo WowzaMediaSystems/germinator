@@ -1,3 +1,5 @@
+require 'germinator/base'
+
 class InstallGerminatorGenerator < Rails::Generators::Base
   source_root File.expand_path('../../..', __FILE__)
 
@@ -6,8 +8,7 @@ class InstallGerminatorGenerator < Rails::Generators::Base
     # Make sure we don't already have a table in the database
     unless ActiveRecord::Base.connection.table_exists? Germinator::VERSION_TABLE_NAME
       puts "  Creating Germinator table: #{Germinator::VERSION_TABLE_NAME}"
-      ActiveRecord::Base.establish_connection
-      ActiveRecord::Base.connection.execute("CREATE TABLE `#{Germinator::VERSION_TABLE_NAME}` (`version` VARCHAR(20) NOT NULL)")      
+      Base::confirm_database_table
     else
       puts "  Germinator table exists: #{Germinator::VERSION_TABLE_NAME}" 
     end

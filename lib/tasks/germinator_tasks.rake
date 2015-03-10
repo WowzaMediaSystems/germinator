@@ -35,19 +35,11 @@ namespace :db do
   end
 
 
-  # desc "Execute the plant method of a specific germination file, regardless of whether it's been run previously."
+  # desc "DEPRECATED: Execute the plant method of a specific germination file, regardless of whether it's been run previously. (No longer available)"
   task :plant, [:seed_name] => [:environment] do |t,args|
-    args.with_defaults(:seed_name => nil)
-
-    if args.seed_name.nil?
-      puts "A seed name must be specified.  Only the name, time stamp is not required."
-      puts ""
-      puts "Example: rake db:plant[some_seed_name]"
-      puts ""
-    else
-      seeder = Germinator::Seeder.new
-      seeder.plant args.seed_name
-    end
+    puts ""
+    puts "!! The plant rake task has been removed.  Please create a rake task for repeatable database manipulations."
+    puts ""
   end
 
 end
