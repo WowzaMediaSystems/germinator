@@ -34,6 +34,28 @@ namespace :db do
     seeder.reseed step: args.step
   end
 
+  task :germinate_by_name, [:seed_name] => [:environment] do |t,args|
+    args.with_defaults(:seed_name => nil)
+    unless seed_name.nil?
+      puts "You need to specify a seed_name (without timestamp)."
+      puts ""
+      puts 'Usage: rake db:germinate_by_name["name_of_seed_file"]'
+      puts ""
+    end
+    Germinator.germinate(seed_name)
+  end
+
+  task :shrivel_by_name, [:seed_name] => [:environment] do |t,args|
+    args.with_defaults(:seed_name => nil)
+    unless seed_name.nil?
+      puts "You need to specify a seed_name (without timestamp)."
+      puts ""
+      puts 'Usage: rake db:shrivel_by_name["name_of_seed_file"]'
+      puts ""
+    end
+    Germinator.shrivel(seed_name)
+  end
+
 
   # desc "DEPRECATED: Execute the plant method of a specific germination file, regardless of whether it's been run previously. (No longer available)"
   task :plant, [:seed_name] => [:environment] do |t,args|
