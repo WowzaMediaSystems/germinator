@@ -22,7 +22,7 @@ This gem was created by:
 - [Manual Rake Activation](#manual_activation)
 - [Migrations and Seeds](#migrations_and_seeds)
 
-# Installation<a href="installation"></a>
+# Installation<a name="installation"></a>
 
 To install the Germinator database table and the db/germinate directory in your Rails application:
 
@@ -53,13 +53,13 @@ $ rails generate install_germinator
 
 You're done!!
 
-# Upgrading from Version 1.0.x<a href="upgrading"></a>
+# Upgrading from Version 1.0.x<a name="upgrading"></a>
 
 Not that there are many out there, but users who might be upgrading from version 1.0.x should note that the original migrations table `germinator_migrations` has been renamed to `germinator_seeds`.
 
 You do not need to do anything to handle this.  The Germinator gem will automatically detect the existance of the version 1.0.x table and migrate the content to the new table.
 
-# Working with Seeds<a href="working_with_seeds"></a>
+# Working with Seeds<a name="working_with_seeds"></a>
 
 
 ##### What is a Seed?
@@ -169,7 +169,7 @@ Don't worry, this behavior is backwards compatible, by default the configure.env
 
 For more details on how to use the configure method, see the example code above.
 
-# Germinating the Database<a href="germinating"></a>
+# Germinating the Database<a name="germinating"></a>
 
 To run all of the unexecuted seed files, run the following command from the application directory:
 
@@ -187,7 +187,7 @@ By default, all unexecuted seed files are run by the `db:germinate` task.  If yo
 $ rake db:germinate[1]
 ```
 
-# Shriveling the Database<a href="shriveling"></a>
+# Shriveling the Database<a name="shriveling"></a>
 
 To reverse the germinate process, you run the shrivel task.  This calls the shrivel command on each previously executed Germinator seed file in reverse-chronological order. To execute the task, run the following command from the application directory:
 
@@ -215,7 +215,7 @@ To shrivel the database for all executed files you can run the following command
 $ rake db:shrivel[0]
 ```
 
-# Reseeding the Database<a href="reseeding"></a>
+# Reseeding the Database<a name="reseeding"></a>
 
 To completely reseed the database, you can execute the reseed task like this:
 
@@ -236,7 +236,7 @@ $ rake db:reseed[3]
 This will reseed the last three seed files.
 
 
-# Manual Rake Activation<a href="manual_activation"></a>
+# Manual Rake Activation<a name="manual_activation"></a>
 
 There are two rake tasks that can be used to manually activate a Seed file's `germinate` and `shrivel` command:
 
@@ -285,7 +285,7 @@ $ rake db:shrivel_by_name['add_sample_records_to_database']
 *NOTE: This will only execute the seed file's `shrivel` command if the seed file has been previously been germinated.  If it is run, it's entry will be removed from the `germinator_seeds` table containing the file that was executed and the details of its execution.*
 
 
-# Migrations and Seeds<a href="migrations_and_seeds"></a>
+# Migrations and Seeds<a name="migrations_and_seeds"></a>
 
 It may be useful to execute a seed file from within the context of a Migration.  For that, the Germinator module has two helper methods for executing a Seed files germinate and shrivel methods.
 
