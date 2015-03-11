@@ -16,9 +16,9 @@ This gem was created by:
 - [Installation](#installation)
 - [Upgrading from Version 1.0.x](#upgrading)
 - [Working with Seeds](#working_with_seeds)
-- [Germinating the Database](#germinating)
-- [Shriveling the Database](#shriveling)
-- [Reseeding the Database](#reseeding)
+- [Germinating the Database](#germinating_the_database)
+- [Shriveling the Database](#shriveling_the_database)
+- [Reseeding the Database](#reseeding_the_database)
 - [Manual Rake Activation](#manual_activation)
 - [Migrations and Seeds](#migrations_and_seeds)
 
@@ -169,7 +169,7 @@ Don't worry, this behavior is backwards compatible, by default the configure.env
 
 For more details on how to use the configure method, see the example code above.
 
-# Germinating the Database<a name="germinating"></a>
+# Germinating the Database<a name="germinating_the_database"></a>
 
 To run all of the unexecuted seed files, run the following command from the application directory:
 
@@ -187,7 +187,7 @@ By default, all unexecuted seed files are run by the `db:germinate` task.  If yo
 $ rake db:germinate[1]
 ```
 
-# Shriveling the Database<a name="shriveling"></a>
+# Shriveling the Database<a name="shriveling_the_database"></a>
 
 To reverse the germinate process, you run the shrivel task.  This calls the shrivel command on each previously executed Germinator seed file in reverse-chronological order. To execute the task, run the following command from the application directory:
 
@@ -215,7 +215,7 @@ To shrivel the database for all executed files you can run the following command
 $ rake db:shrivel[0]
 ```
 
-# Reseeding the Database<a name="reseeding"></a>
+# Reseeding the Database<a name="reseeding_the_database"></a>
 
 To completely reseed the database, you can execute the reseed task like this:
 
