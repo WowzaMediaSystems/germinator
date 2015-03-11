@@ -1,3 +1,4 @@
+require 'germinator/version'
 require 'germinator/base'
 require 'germinator/errors'
 
@@ -80,7 +81,7 @@ module Germinator
         add_seeded_version seed.version, seed.name, seed_object.response, seed_object.message
       rescue Germinator::Errors::InvalidSeedModel => e
         puts e.message
-        return if seed_object.config.stop_on_bad_model
+        return if seed_object.config.stop_on_invalid_model
         add_seeded_version seed.version, seed.name, seed_object.response, seed_object.message
         puts "Moving on..."
       rescue Exception => e
@@ -172,7 +173,7 @@ module Germinator
         remove_seeded_version seed.version
       rescue Germinator::Errors::InvalidSeedModel => e
         puts e.message
-        return if seed_object && seed_object.config.stop_on_bad_model
+        return if seed_object && seed_object.config.stop_on_invalid_model
         remove_seeded_version seed.version
         puts "Moving on..."          
       rescue Exception => e
@@ -275,7 +276,7 @@ module Germinator
     #
     def seeded_versions
       #ActiveRecord::Base.establish_connection
-      version_records = ActiveRecord::Base.connection.execute("SELECT * FROM `#{Germinator::VERSION_TABLE_NAME}` ORDER BY `version`")
+      version_records = ActiveRecord::Base.connection.execute("SELECT * FROM `#{Germinator::VERSION_2_TABLE_NAME}` ORDER BY `version`")
 
       versions = version_records.map do |version_record| 
         key, value = version_record.first
@@ -292,7 +293,7 @@ module Germinator
     #
     def add_seeded_version version, name, response, message
       return unless version and (version.to_i > 0)
-      ActiveRecord::Base.connection.execute("INSERT INTO `#{Germinator::VERSION_TABLE_NAME}` (version, name, response, message) VALUES ('#{version.to_s}', '#{name.to_s}', '#{response.to_s}', '#{message.to_s}')")
+      ActiveRecord::Base.connection.execute("INSERT INTO `#{Germinator::VERSION_2_TABLE_NAME}` (version, name, response, message) VALUES ('#{version.to_s}', '#{name.to_s}', '#{response.to_s}', '#{message.to_s}')")
     end
 
 
@@ -301,7 +302,7 @@ module Germinator
     #
     def remove_seeded_version version
       return unless version and (version.to_i > 0)
-      ActiveRecord::Base.connection.execute("DELETE FROM `#{Germinator::VERSION_TABLE_NAME}` WHERE `version`='#{version.to_s}'")
+      ActiveRecord::Base.connection.execute("DELETE FROM `#{Germinator::VERSION_2_TABLE_NAME}` WHERE `version`='#{version.to_s}'")
     end
   end
 end  

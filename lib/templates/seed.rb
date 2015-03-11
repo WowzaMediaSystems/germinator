@@ -19,30 +19,6 @@ class %{class_name}Seeder < Germinator::Seed
     #config.stop_on_error = false
 
 
-    # "Stop on bad model" determines if the germination process should stop when a seed file fails the model 
-    # validation.
-    #
-    # If the value is FALSE, then the germination process will record the bad model validation in the
-    # `germinator_migrations` table and continue on through the list of seed files.
-    #
-    # If the value is TRUE, then the germination process will stop executing the list of seed files if the model
-    # validation fails.
-    
-    #config.stop_on_bad_model = false
-
-
-    # "Environments" identifies which environments it is safe to execute this seed file in.
-    # There are 4 valid values:
-    #
-    # true                    -> Returning true says that this seed file can be run in any environment.
-    # "development"           -> Returning a string with the name of one environment limits it execution 
-    #                            to that one environment, in all other environments this file will be ignored.
-    # ["development", "test"] -> Returning an array of strings limits the seed files execution to only the
-    #                            environments named in the array.
-    # false                   -> Return false says that this seed file is disabled and should not be executed.
-    
-    #config.environments = true
-
 
     # "Valid Models" indentifies which models and/or methods need to be present to properly execute this seed file.
     # Model validation occurs in every seed file before anything is executed.  There are several valid values:
@@ -60,6 +36,32 @@ class %{class_name}Seeder < Germinator::Seed
     #                                  an instance method or the name of an ActiveRecord attribute.
     
     #config.valid_models = true
+
+
+
+    # "Stop on bad model" determines if the germination process should stop when a seed file fails the model 
+    # validation.
+    #
+    # If the value is FALSE, then the germination process will record the bad model validation in the
+    # `germinator_migrations` table and continue on through the list of seed files.
+    #
+    # If the value is TRUE, then the germination process will stop executing the list of seed files if the model
+    # validation fails.
+    
+    #config.stop_on_invalid_model = false
+
+
+    # "Environments" identifies which environments it is safe to execute this seed file in.
+    # There are 4 valid values:
+    #
+    # true                    -> Returning true says that this seed file can be run in any environment.
+    # "development"           -> Returning a string with the name of one environment limits it execution 
+    #                            to that one environment, in all other environments this file will be ignored.
+    # ["development", "test"] -> Returning an array of strings limits the seed files execution to only the
+    #                            environments named in the array.
+    # false                   -> Return false says that this seed file is disabled and should not be executed.
+    
+    #config.environments = true
 
   end
 
