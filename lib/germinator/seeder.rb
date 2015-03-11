@@ -17,6 +17,8 @@ module Germinator
     # *step:* => A maximum number of seeds to germinate.  nil or 0 will execute all unseeded files in the germinate directory. (default: nil)
     #
     def germinate p={}
+      Base::confirm_database_table
+
       step = p.has_key?(:step) ? p[:step].to_i : nil
       step = nil if step==0
 
@@ -107,7 +109,7 @@ module Germinator
     #    
     def shrivel p={}
       Base::confirm_database_table
-      include_seeds
+
       step = p.has_key?(:step) ? p[:step].to_i : 1
       step = nil if step==0
 
