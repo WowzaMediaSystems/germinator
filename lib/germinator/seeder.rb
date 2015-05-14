@@ -280,10 +280,7 @@ module Germinator
       #ActiveRecord::Base.establish_connection
       version_records = ActiveRecord::Base.connection.execute("SELECT * FROM `#{Germinator::VERSION_2_TABLE_NAME}` ORDER BY `version`")
 
-      versions = version_records.map do |version_record| 
-        key, value = version_record.first
-        value
-      end
+      versions = version_records.map{ |vr| vr[0] }
 
       versions.sort
     end

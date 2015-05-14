@@ -127,6 +127,9 @@ module Germinator
           model = Module.const_get(name.to_s.camelize)
           return false unless model.is_a?(Class)
 
+          model.connection.schema_cache.clear!
+          model.reset_column_information
+
           next if !!methods == methods
           return false unless methods.kind_of?(Array)
 
