@@ -9,5 +9,14 @@ module Germinator
       @environments = true
       @valid_models = true
     end
+
+    def to_hash
+      {
+        stop_on_error: @stop_on_error,
+        stop_on_invalid_model: @stop_on_invalid_model,
+        environments: @environments,
+        valid_models: @valid_models
+      }
+    end
   end
 end

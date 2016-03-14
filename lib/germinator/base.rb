@@ -5,7 +5,7 @@ module Germinator
     protected
     ##
     # Override the puts method to add the ability to indent content in the output.  This is a way of making it prettier for the
-    # console.  
+    # console.
     #
     def puts content, indent=3
       STDOUT.puts "#{(" "*indent)}#{content}"
@@ -27,10 +27,7 @@ module Germinator
     # Displays the configuration object values in the terminal.
     #
     def output_config seed
-      puts "Configuration:"
-      seed.config.instance_variables.each do |ivar| 
-        puts "- #{ivar.to_s.gsub(/\@/, "")} -> #{seed.config.instance_variable_get ivar}", 6
-      end
+      puts "Configuration: #{seed.config.to_hash}"
     end
 
     ##
@@ -51,6 +48,10 @@ module Germinator
           ActiveRecord::Base.connection.execute("DROP TABLE `#{Germinator::VERSION_1_TABLE_NAME}`")
         end
       end
+
+      unless ActiveRecord::Base.connection.column_exists?(Germinator::VERSION_2_TABLE_NAME.to_sym, :configuration)
+        ActiveRecord::Base.connection.execute("ALTER TABLE `#{Germinator::VERSION_2_TABLE_NAME}` ADD `configuration` TEXT")
+      end      
     end
 
   end
