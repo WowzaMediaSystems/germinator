@@ -51,7 +51,7 @@ module Germinator
 
       unless ActiveRecord::Base.connection.column_exists?(Germinator::VERSION_2_TABLE_NAME.to_sym, :configuration)
         ActiveRecord::Base.connection.execute("ALTER TABLE `#{Germinator::VERSION_2_TABLE_NAME}` ADD `configuration` TEXT")
-      end      
+      end
     end
 
   end
