@@ -37,13 +37,13 @@ module Germinator
     #
     def self.confirm_database_table
       ActiveRecord::Base.establish_connection
-      unless ActiveRecord::Base.connection.data_source_exists? Germinator::VERSION_2_TABLE_NAME
+      unless ActiveRecord::Base.connection.table_exists? Germinator::VERSION_2_TABLE_NAME
 
         # Create the germinator_seeds table because it doesn't exist.
         ActiveRecord::Base.connection.execute("CREATE TABLE `#{Germinator::VERSION_2_TABLE_NAME}` (`version` VARCHAR(20) NOT NULL, `name` VARCHAR(300) NOT NULL, `response` VARCHAR(40) NOT NULL, `message` VARCHAR(300))")
 
         # Migrate the Version 1 Table to Version 2.
-        if ActiveRecord::Base.connection.data_source_exists? Germinator::VERSION_1_TABLE_NAME
+        if ActiveRecord::Base.connection.table_exists? Germinator::VERSION_1_TABLE_NAME
           # If the Version 1 germinator_migrations table still exists, copy its contents to the germinator_seeds table to keep the seeds in sync.
           ActiveRecord::Base.connection.execute("INSERT INTO `#{Germinator::VERSION_2_TABLE_NAME}` (`version`, `name`, `response`, `message`) (SELECT version, '', 'Success', 'This entry was upgraded from Version 1' FROM `#{Germinator::VERSION_1_TABLE_NAME}` ORDER BY `version`)")
 
