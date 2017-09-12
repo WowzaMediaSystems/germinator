@@ -7,7 +7,7 @@ module Germinator
   # A base class for the seed files
   #
   class Seed < Germinator::Base
-    
+
 
     attr_reader :config, :response, :message
 
@@ -59,6 +59,9 @@ module Germinator
               raise e
             else
               puts_error e
+              class_name = e.class.name
+              @response = class_name
+              @message = e.message
               puts "Moving on..."
             end
           end
@@ -72,7 +75,7 @@ module Germinator
         error = Germinator::Errors::InvalidSeedEnvironment.new
         @response = error.class.name.to_s.gsub(/Germinator\:\:Errors\:\:/,"")
         @message = error.message
-        raise error        
+        raise error
       end
     end
 
@@ -105,7 +108,7 @@ module Germinator
       envs = config.environments
       return envs if !!envs == envs
       return false unless envs.kind_of?(String) || envs.kind_of?(Array)
-      
+
       envs = [ envs ] if envs.kind_of?(String)
       envs = envs.map{ |e| e.downcase }
 
@@ -126,6 +129,9 @@ module Germinator
         begin
           model = Module.const_get(name.to_s.camelize)
           return false unless model.is_a?(Class)
+
+          model.connection.schema_cache.clear!
+          model.reset_column_information
 
           next if !!methods == methods
           return false unless methods.kind_of?(Array)
@@ -151,5 +157,12 @@ module Germinator
       return true
     end
 
+    private def ellipsisize(str, minimum_length=4,edge_length=3)
+      return self if str.length < minimum_length or str.length <= edge_length*2
+      edge = '.'*edge_length
+      mid_length = str.length - edge_length*2
+      str.gsub(/(#{edge}).{#{mid_length},}(#{edge})/, '\1...\2')
+    end
+
   end
-end  
+end

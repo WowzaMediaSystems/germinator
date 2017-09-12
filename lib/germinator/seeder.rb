@@ -38,7 +38,7 @@ module Germinator
     #
     def germinate_by_name name
       Base::confirm_database_table
-      include_seeds      
+      include_seeds
       _seeds = seeds.select{ |seed_name, seed| seed.name == name }
       return if _seeds.size == 0
       seed_name, seed = _seeds.first
@@ -58,33 +58,33 @@ module Germinator
 
 
     ##
-    # Executes a seed file's germinate method using the seed_name (version_name) of 
-    # the seed file. The germinate method is only executed if it has not been executed 
+    # Executes a seed file's germinate method using the seed_name (version_name) of
+    # the seed file. The germinate method is only executed if it has not been executed
     # previously.
     #
     def germinate_by_seed_name seed_name
       Base::confirm_database_table
-      include_seeds      
+      include_seeds
       _seeds = unseeded
       return unless _seeds.has_key?(seed_name)
-      
+
       seed = _seeds[seed_name]
 
       puts "== #{seed}: GERMINATE ==========", 0
       begin
-        
+
         seed_object = get_seed_object seed
         output_config seed_object
         seed_object.migrate :up
-        
-        add_seeded_version seed.version, seed.name, seed_object.response, seed_object.message
+
+        add_seeded_version seed.version, seed.name, seed_object.response, seed_object.message, seed_object.config.to_hash
       rescue Germinator::Errors::InvalidSeedEnvironment => e
         puts e.message
-        add_seeded_version seed.version, seed.name, seed_object.response, seed_object.message
+        add_seeded_version seed.version, seed.name, seed_object.response, seed_object.message, seed_object.config.to_hash
       rescue Germinator::Errors::InvalidSeedModel => e
         puts e.message
         return if seed_object.config.stop_on_invalid_model
-        add_seeded_version seed.version, seed.name, seed_object.response, seed_object.message
+        add_seeded_version seed.version, seed.name, seed_object.response, seed_object.message, seed_object.config.to_hash
         puts "Moving on..."
       rescue Exception => e
         puts ""
@@ -93,7 +93,7 @@ module Germinator
         puts "There was an error while executing the seeds.  Germination stopped!", 0
         puts ""
         raise e if !seed_object || seed_object.config.stop_on_error
-        add_seeded_version seed.version, seed.name, seed_object.response, seed_object.message
+        add_seeded_version seed.version, seed.name, seed_object.response, seed_object.message, seed_object.config.to_hash
       ensure
         puts "== #{seed}: END       ==========", 0
       end
@@ -106,7 +106,7 @@ module Germinator
     # ==== Parameters:
     #
     # *step:* => A maximum number of seeds to shrivel.  nil or 0 will execute all unseeded files in the germinate directory. (default: 1)
-    #    
+    #
     def shrivel p={}
       Base::confirm_database_table
 
@@ -120,7 +120,7 @@ module Germinator
         shrivel_by_seed_name seed_name
         i += 1
         break if step and i >= step
-      end      
+      end
     end
 
 
@@ -149,17 +149,17 @@ module Germinator
 
 
     ##
-    # Executes a seed file's germinate method using the seed_name (version_name) of 
-    # the seed file. The germinate method is only executed if it has not been executed 
+    # Executes a seed file's germinate method using the seed_name (version_name) of
+    # the seed file. The germinate method is only executed if it has not been executed
     # previously.
     #
     def shrivel_by_seed_name seed_name
       Base::confirm_database_table
-      include_seeds      
+      include_seeds
 
       _seeds = seeded
       return unless _seeds.has_key?(seed_name)
-      
+
       seed = _seeds[seed_name]
 
       begin
@@ -168,7 +168,7 @@ module Germinator
         output_config seed_object
         seed_object.migrate :down
         puts "== #{seed}: END     ==========", 0
-        
+
         remove_seeded_version seed.version
       rescue Germinator::Errors::InvalidSeedEnvironment => e
         puts e.message
@@ -177,7 +177,7 @@ module Germinator
         puts e.message
         return if seed_object && seed_object.config.stop_on_invalid_model
         remove_seeded_version seed.version
-        puts "Moving on..."          
+        puts "Moving on..."
       rescue Exception => e
         puts ""
         puts_error e
@@ -201,7 +201,7 @@ module Germinator
     # ==== Parameters:
     #
     # *step:* => A maximum number of seeds to reseed.  nil or 0 will execute all unseeded files in the germinate directory. (default: nil)
-    #    
+    #
     def reseed p={}
       step = p.has_key?(:step) ? p[:step].to_i : 1
       step = nil if step==0
@@ -245,7 +245,7 @@ module Germinator
 
       files.each do |file|
         seed_file = SeedFile.new(file)
-        hash[seed_file.seed_name] = seed_file 
+        hash[seed_file.seed_name] = seed_file
       end
 
       hash
@@ -258,7 +258,7 @@ module Germinator
     #
     def seeded
       versions = seeded_versions
-      seeds.select{ |key, seed| versions.include?(seed.version.to_s) } 
+      seeds.select{ |key, seed| versions.include?(seed.version.to_s) }
     end
 
 
@@ -267,7 +267,7 @@ module Germinator
     # Returns a hash of unseeded germinator files as SeedFile objects keyed by seed name.
     def unseeded
       versions = seeded_versions
-      seeds.select{ |key, seed| !versions.include?(seed.version.to_s) } 
+      seeds.select{ |key, seed| !versions.include?(seed.version.to_s) }
     end
 
 
@@ -280,10 +280,7 @@ module Germinator
       #ActiveRecord::Base.establish_connection
       version_records = ActiveRecord::Base.connection.execute("SELECT * FROM `#{Germinator::VERSION_2_TABLE_NAME}` ORDER BY `version`")
 
-      versions = version_records.map do |version_record| 
-        key, value = version_record.first
-        value
-      end
+      versions = version_records.map{ |vr| vr[0] }
 
       versions.sort
     end
@@ -293,9 +290,9 @@ module Germinator
     ##
     # Inserts a seeded version number into the database.
     #
-    def add_seeded_version version, name, response, message
+    def add_seeded_version version, name, response, message, configuration={}
       return unless version and (version.to_i > 0)
-      ActiveRecord::Base.connection.execute("INSERT INTO `#{Germinator::VERSION_2_TABLE_NAME}` (version, name, response, message) VALUES ('#{version.to_s}', '#{name.to_s}', '#{response.to_s}', '#{message.to_s}')")
+      ActiveRecord::Base.connection.execute("INSERT INTO `#{Germinator::VERSION_2_TABLE_NAME}` (version, name, response, message, configuration) VALUES ('#{version.to_s}', '#{name.to_s}', '#{response.to_s.truncate(40, omission: "...#{response.to_s.last(25)}")}', '#{message.to_s}', '#{configuration.to_json}')")
     end
 
 
@@ -307,4 +304,4 @@ module Germinator
       ActiveRecord::Base.connection.execute("DELETE FROM `#{Germinator::VERSION_2_TABLE_NAME}` WHERE `version`='#{version.to_s}'")
     end
   end
-end  
+end
