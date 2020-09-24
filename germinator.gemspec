@@ -18,5 +18,5 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency "actionview", ">= 5.2.4.3"
+  s.add_dependency "actionview", ">= 6.0.3.3"
 end
