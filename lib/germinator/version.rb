@@ -1,5 +1,5 @@
 module Germinator
-  VERSION="2.0.9"
+  VERSION="2.0.10"
 
   # Default table name in the database.
   VERSION_1_TABLE_NAME = "germinator_migrations"
