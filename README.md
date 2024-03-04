@@ -1,18 +1,13 @@
 # Germinator
+
 Rails allows incremental database migrations, but only provides a single seed file (non-incremental) that causes problems when you try to run it during each application deploy.  Germinate provides a process very similar to the Rails database migrations that allows you to ensure that a data seed only gets run once in each environment.  It also provides a way to limit which Rails environments are allowed to run particular seeds, which helps protect data in sensitive environments (e.g. Production)
 
-# License
+## License
 
-This Rails Gem is distributed under the MIT Open Source License.  To read more about it view the [MIT-LICENSE](https://github.com/WowzaMediaSystems/germinator/blob/master/MIT-LICENSE) file in the repository.
+This Rails Gem is distributed under the MIT Open Source License.  To read more about it view the [MIT LICENSE](https://github.com/WowzaMediaSystems/germinator/blob/main/LICENSE) file in the repository.
 
-#### Attribution
+## Contents
 
-This gem was created by:
-
-- Jocko MacGregor
-- Wowza Media Systems, Inc.
-
-# Contents
 - [Installation](#installation)
 - [Upgrading from Version 1.0.x](#upgrading)
 - [Working with Seeds](#working_with_seeds)
@@ -22,7 +17,7 @@ This gem was created by:
 - [Manual Rake Activation](#manual_activation)
 - [Migrations and Seeds](#migrations_and_seeds)
 
-# Installation<a name="installation"></a>
+## Installation<a name="installation"></a>
 
 To install the Germinator database table and the db/germinate directory in your Rails application:
 
