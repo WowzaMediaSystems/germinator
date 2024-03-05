@@ -19,4 +19,5 @@ Gem::Specification.new do |s|
   s.test_files = Dir["test/**/*"]
 
   s.add_dependency "actionview", ">= 6.0.3.3", "< 7.0"
+  s.add_development_dependency "rspec", "~> 3.13"
 end
