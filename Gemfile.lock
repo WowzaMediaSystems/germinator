@@ -22,6 +22,7 @@ GEM
     builder (3.2.4)
     concurrent-ruby (1.2.3)
     crass (1.0.6)
+    diff-lcs (1.5.1)
     erubi (1.12.0)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
@@ -44,6 +45,19 @@ GEM
     rails-html-sanitizer (1.6.0)
       loofah (~> 2.21)
       nokogiri (~> 1.14)
+    rspec (3.13.0)
+      rspec-core (~> 3.13.0)
+      rspec-expectations (~> 3.13.0)
+      rspec-mocks (~> 3.13.0)
+    rspec-core (3.13.0)
+      rspec-support (~> 3.13.0)
+    rspec-expectations (3.13.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.13.0)
+    rspec-mocks (3.13.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.13.0)
+    rspec-support (3.13.1)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     zeitwerk (2.6.13)
@@ -55,6 +69,7 @@ PLATFORMS
 DEPENDENCIES
   actionview (>= 6.0.3.3, < 7.0)
   germinator!
+  rspec (~> 3.13)
 
 BUNDLED WITH
    1.17.3
