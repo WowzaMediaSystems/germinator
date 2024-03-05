@@ -24,6 +24,7 @@ jobs:
         run: |
           mkdir -p $HOME/.gem
           echo ":github: Bearer ${{secrets.GITHUB_TOKEN}}" >> $HOME/.gem/credentials
+          echo ":rubygems_api_key: ${{secrets.RUBYGEMS_API_KEY}}" >> $HOME/.gem/credentials
           chmod 0600 $HOME/.gem/credentials
       - name: Build Gem
         run: gem build germinator.gemspec
@@ -33,7 +34,7 @@ jobs:
           echo "GEM_VERSION=$GEM_VERSION" >> $GITHUB_ENV
       - name: Publish Gem
         run: |
-          gem push --key github --host https://rubygems.pkg.github.com/${{ github.repository_owner }} germinator-${{env.GEM_VERSION}}.gem
+          gem push germinator-${{env.GEM_VERSION}}.gem
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
