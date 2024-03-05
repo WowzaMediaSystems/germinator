@@ -29,7 +29,7 @@ jobs:
         run: gem build germinator.gemspec
       - name: Get Ruby Gem Version
         run: |
-          GEM_VERSION=$(ruby -r ./lib/version.rb -e "puts Germinator::VERSION")
+          GEM_VERSION=$(ruby -r ./lib/germinator/version.rb -e "puts Germinator::VERSION")
           echo "GEM_VERSION=$GEM_VERSION" >> $GITHUB_ENV
       - name: Publish Gem
         run: |
